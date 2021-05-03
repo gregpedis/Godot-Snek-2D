@@ -1,0 +1,32 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Assets/Sprites/Snake2.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Sprites/Snake4.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sprites/Snake1.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Sprites/Snake3.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Scripts/snake.gd" type="Script" id=5]
+[ext_resource path="res://Assets/Scenes/snake_block.tscn" type="PackedScene" id=6]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 1 ), ExtResource( 4 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+
+[node name="Snake" type="KinematicBody2D"]
+scale = Vector2( 5, 5 )
+script = ExtResource( 5 )
+SnakeBlock = ExtResource( 6 )
+distance_moved = 40.0
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+frame = 2
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+scale = Vector2( 0.4, 0.4 )
+shape = SubResource( 2 )

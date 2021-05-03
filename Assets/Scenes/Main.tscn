@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Scenes/snake.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Scenes/apple.tscn" type="PackedScene" id=3]
+
+[node name="Main" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = 1.18921
+margin_top = -2.18921
+margin_right = 1001.19
+margin_bottom = 597.811
+color = Color( 0.0392157, 0.109804, 0.0392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SnakeTimer" type="Timer" parent="."]
+wait_time = 0.25
+autostart = true
+
+[node name="Snake" parent="." instance=ExtResource( 1 )]
+position = Vector2( 620, 380 )
+
+[node name="Apple" parent="." instance=ExtResource( 3 )]
+position = Vector2( 980, 20 )
+
+[connection signal="timeout" from="SnakeTimer" to="Snake" method="_on_SnakeTimer_timeout"]
+[connection signal="apple_eaten" from="Apple" to="Snake" method="_on_Apple_apple_eaten"]

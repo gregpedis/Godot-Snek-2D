@@ -16,7 +16,7 @@ var snake_blocks:= []
 var just_eaten:=false
 
 onready var root_node = get_tree().get_root()
-
+onready var screen_size = get_viewport_rect().size
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,7 +31,7 @@ func _process(_delta):
 
 func show_debug_messages():
 	print("DEBUG::SNAKE: distance_moved = {0}".format([distance_moved]))
-	print("DEBUG::SNAKE: viewport_rect_size = {0}".format([get_viewport_rect().size]))
+	print("DEBUG::SNAKE: viewport_rect_size = {0}".format([screen_size]))
 
 
 func set_initial_body():
@@ -95,6 +95,11 @@ func move_head():
 	self.position += curr_dir * distance_moved	
 		
 func check_if_killed():
+	var out_less = position.x < 0 || position.y <0
+	var out_more = position.x > screen_size.x || position.y > screen_size.y
+	if out_less || out_more:
+		restart()
+		return
 	for sb in snake_blocks:
 		if self.position == sb.position:
 			restart()

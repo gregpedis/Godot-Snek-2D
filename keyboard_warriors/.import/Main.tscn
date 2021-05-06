@@ -1,0 +1,88 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/In.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Out.gd" type="Script" id=3]
+[ext_resource path="res://Fonts/itim_regular_40.tres" type="DynamicFont" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VSplit" type="VSplitContainer" parent="."]
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 20
+dragger_visibility = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel_Out" type="PanelContainer" parent="VSplit"]
+margin_right = 1024.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Out" type="RichTextLabel" parent="VSplit/Panel_Out"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 133.0
+custom_fonts/normal_font = ExtResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[color=0xaf2a47] Placeholder Output [/color]
+"
+text = " Placeholder Output 
+"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel_In" type="PanelContainer" parent="VSplit"]
+margin_top = 140.0
+margin_right = 1024.0
+margin_bottom = 240.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="In" type="LineEdit" parent="VSplit/Panel_In"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 93.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "Placeholder Input"
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+shortcut_keys_enabled = false
+right_icon = ExtResource( 5 )
+script = ExtResource( 2 )
+
+[connection signal="mistake_corrected" from="." to="VSplit/Panel_In/In" method="_on_Main_mistake_corrected"]
+[connection signal="mistake_spotted" from="." to="VSplit/Panel_In/In" method="_on_Main_mistake_spotted"]
+[connection signal="stanza_completed" from="." to="VSplit/Panel_In/In" method="_on_Main_stanza_completed"]
+[connection signal="word_completed" from="." to="VSplit/Panel_In/In" method="_on_Main_word_completed"]
+[connection signal="text_changed" from="VSplit/Panel_In/In" to="." method="_on_In_text_changed"]

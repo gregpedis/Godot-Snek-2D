@@ -2,9 +2,11 @@ class_name Main
 extends Control
 
 const Logger = preload("res://Scripts/Helpers/logger.gd")
+const ProgressState = preload("res://Scripts/Models/ProgressState.gd")
 
 signal mistake_spotted(idx)
 signal mistake_corrected
+signal text_changed(new_size)
 signal word_completed
 signal stanza_completed
 
@@ -12,11 +14,11 @@ onready var in_text = get_node("VSplit/Panel_In/In")
 onready var out_text = get_node("VSplit/Panel_Out/Out")
 
 var stanzas = [
-	"Hello World!",
-	"This is a test example.",
+	"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.",
+	"I am so clever that sometimes I don't understand a single word of what I am saying.",
 	"Do not go gentle into that good night...",
-	"Don't Panic.",
-	"I'd far rather be happy than right any day.",
+	"Yesterday is history, tomorrow is a mystery, today is a gift of God, which is why we call it the present.",
+	"'The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two' said Deep Thought, with infinite majesty and calm.",
 ]
 
 var stanza_idx := 0
@@ -28,17 +30,8 @@ var word := ""
 
 var mistake_so_far := false
 
-class Progress:
-	var wpm
-	var accuracy
-	var time_spent
-
-	func _init():
-		wpm = 0
-		accuracy = 0
-		time_spent = 0
 		
-var progress : Progress
+var progress : ProgressState
 var logger : Logger
 var rng : RandomNumberGenerator 
 
@@ -49,7 +42,7 @@ func _ready():
 	
 func initialize():
 	logger = Logger.new()	
-	progress = Progress.new()
+	progress = ProgressState.new()
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 
@@ -68,11 +61,12 @@ func pick_new_stanza():
 
 
 func _on_In_text_changed(new_text:String):
+	emit_signal("text_changed", new_text.length())
 	if check_completed(new_text):
 		if word_idx + 1 == words.size():
 			pick_new_stanza()
 		else:
-			word_idx+=1
+			word_idx += 1
 			word = words[word_idx]
 			logger.log_debug("Main", "Word   --> {0}".format([word]))
 	else:	
@@ -94,7 +88,7 @@ func check_mistake(new_text:String):
 		if matching:
 			return false
 		else:
-			emit_signal("mistake_spotted")
+			emit_signal("mistake_spotted",new_text.length()-1)
 			mistake_so_far = true
 			logger.log_error("Main", "Mistake was spotted.")
 			return true
@@ -113,3 +107,8 @@ func check_completed(new_text):
 		return true
 	else:
 		return false
+
+
+func _on_Button_button_up():
+	pick_new_stanza()
+	emit_signal("stanza_completed")

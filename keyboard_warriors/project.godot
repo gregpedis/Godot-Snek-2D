@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "BBCodeFormatter",
+"language": "GDScript",
+"path": "res://Scripts/Helpers/bbcode_formatter.gd"
+}, {
 "base": "LineEdit",
 "class": "In",
 "language": "GDScript",
@@ -28,12 +33,25 @@ _global_script_classes=[ {
 "class": "Out",
 "language": "GDScript",
 "path": "res://Scripts/Out.gd"
+}, {
+"base": "Reference",
+"class": "OutputState",
+"language": "GDScript",
+"path": "res://Scripts/Models/OutputState.gd"
+}, {
+"base": "Reference",
+"class": "ProgressState",
+"language": "GDScript",
+"path": "res://Scripts/Models/ProgressState.gd"
 } ]
 _global_script_class_icons={
+"BBCodeFormatter": "",
 "In": "",
 "Logger": "",
 "Main": "",
-"Out": ""
+"Out": "",
+"OutputState": "",
+"ProgressState": ""
 }
 
 [application]

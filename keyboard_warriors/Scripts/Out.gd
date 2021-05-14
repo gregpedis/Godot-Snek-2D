@@ -1,55 +1,52 @@
 class_name Out
 extends RichTextLabel
 
-const COLOR_DEFAULT := "#838a99"
-const COLOR_SUCCESS := "#49c92c"
-const COLOR_FAILURE := "#af2a47"
+const Logger = preload("res://Scripts/Helpers/logger.gd")
+const BBCodeFormatter = preload("res://Scripts/Helpers/bbcode_formatter.gd")
+const OutputState  = preload("res://Scripts/Models/OutputState.gd")
 
-var words := []
-var word_idx := 0
-var word := ""
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var logger : Logger
+var formatter : BBCodeFormatter
+var _state : OutputState
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	logger = Logger.new()
+	formatter = BBCodeFormatter.new()
+	_state = OutputState.new()
 
 
-func initialize_stanza(words):
-	self.words = words
-	word_idx = 0
+func initialize_stanza(new_words):
+	_state.reset(new_words)
+	render_output()
 	
-	var mutated_text = add_effect(add_color(words[0],COLOR_DEFAULT), "wave")
-
-	for idx in range(1, words.size()):
-		mutated_text += add_color(words[idx], COLOR_DEFAULT)
 	
+func render_output():
+	var mutated_text = formatter.format_text(_state)
 	self.bbcode_text = mutated_text
-	#print(self.bbcode_text)
-	parse_stanza()
+	logger.log_debug("Out", mutated_text)
 
 
-func add_color(text, color):
-	var format_values = {
-		"color": color,
-		"value": text,
-		}
-	var template = "[color={color}] {value} [/color]"
-	return template.format(format_values)
+func _on_Main_text_changed(new_size):
+	_state.char_idx = new_size-1
+	render_output()
 
 
-func add_effect(text, effect, effect_props = []):
-	var format_values = {
-		"effect": effect,
-		"value": text
-	}
-	var template = "[{effect}]{value}[/{effect}]"
-	return template.format(format_values)	
+func _on_Main_word_completed():
+	_state.move_word()
+	render_output()
 
 
-func parse_stanza():
+func _on_Main_stanza_completed():
 	pass
+
+
+func _on_Main_mistake_spotted(idx):
+	_state.mistake_idx = idx
+	render_output()
+
+
+func _on_Main_mistake_corrected():
+	_state.mistake_idx = -1
+	render_output()	
